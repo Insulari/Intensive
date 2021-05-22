@@ -26,11 +26,11 @@ public class Message {
         this.id = id;
     }
 
-    public Date getTime() {
+    public Date getSendTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setSendTime(Date time) {
         this.time = time;
     }
 
