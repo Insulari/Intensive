@@ -1,0 +1,13 @@
+user
+
+- id INT NOT NULL AUTO_INCREMENT
+- reg_time DATETIME NOT NULL
+- session_id VARCHAR(255) NOT NULL
+- name VARCHAR(255) NOT NULL
+
+massage
+
+- id INT NOT NULL AUTO_INCREMENT
+- user_id INT NOT NULL
+- send_time DATETIME NOT NULL
+- text_msg TEXT NOT NULL
