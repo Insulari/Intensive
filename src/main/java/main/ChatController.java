@@ -12,13 +12,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
-
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @RestController
 public class ChatController {
@@ -37,14 +35,25 @@ public class ChatController {
         String sessionId = getSessionId();
         User user = userRepository.getBySessionId(sessionId);
         response.setResult(user != null);
-        if(user != null) {
+        if (user != null) {
             response.setName(user.getName());
         }
         return response;
     }
 
+    @GetMapping(path = "/api/users")
+    public Map<String, List> getUsers() {
+        Iterable<User> all = userRepository.findAll();
+        final List<User> users = StreamSupport
+                .stream(all.spliterator(), false)
+                .collect(Collectors.toList());
+        Map<String, List> getUsers = new HashMap<>();
+        getUsers.put("users", users);
+        return getUsers;
+    }
+
     @PostMapping(path = "/api/users")
-    public HashMap<String, Boolean> addUser(HttpServletRequest request) {
+    public Map<String, Boolean> addUser(HttpServletRequest request) {
         String name = request.getParameter("name");
         String sessionId = getSessionId();
         User user = new User();
@@ -78,11 +87,11 @@ public class ChatController {
     }
 
     @GetMapping(path = "/api/messages")
-    public HashMap<String, List> getMessages() {
-        ArrayList<MessageResponse> messagesList =
+    public Map<String, List> getMessages() {
+        List<MessageResponse> messagesList =
                 new ArrayList<>();
         Iterable<Message> messages = messageRepository.findAll();
-        for(Message message : messages) {
+        for (Message message : messages) {
             MessageResponse messageItem = new MessageResponse();
             messageItem.setName(message.getUser().getName());
             messageItem.setTime(
@@ -91,7 +100,7 @@ public class ChatController {
             messageItem.setText(message.getText());
             messagesList.add(messageItem);
         }
-        HashMap<String, List> response = new HashMap<>();
+        Map<String, List> response = new HashMap<>();
         response.put("messages", messagesList);
         return response;
     }

@@ -4,7 +4,7 @@ $(function(){
 
     let initChat = function() {
         loadMessages();
-        //loadUsers();
+        loadUsers();
     };
 
     let loadUsers = function() {
